@@ -1,2 +1,2 @@
 require:
-- "pypi:mock"
+- pypi:mock

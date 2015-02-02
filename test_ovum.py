@@ -17,6 +17,10 @@ class TestOvum(TestCase):
         self.assertEqual(err, expected_error)
         self.assertEqual(out, expected_output)
 
+    def setup_yml(self, yml):
+        with open('ovum.yml', 'w') as file:
+            file.write(yml)
+
     def test_cli_version(self):
         self.assert_ovum_output(['--version'], "ovum v1.0\n")
 
@@ -36,4 +40,11 @@ class TestOvum(TestCase):
         self.run_ovum(['require', 'pypi:mock'])
         with open("ovum.yml", "r") as yml:
             data = yml.read()
-            self.assertEqual(data, 'require:\n- "pypi:mock"')
+            self.assertEqual(data, 'require:\n- pypi:mock\n')
+
+    def test_require_will_append_yml_file(self):
+        self.setup_yml('require:\n- "pypi:mock"')
+        self.run_ovum(['require', 'pypi:mock2'])
+        with open("ovum.yml", "r") as yml:
+            data = yml.read()
+            self.assertEqual(data, 'require:\n- pypi:mock\n- pypi:mock2\n')
