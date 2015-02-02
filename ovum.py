@@ -1,1 +1,3 @@
-print "ovum v1.0"
+__version__ = '1.0'
+
+print "ovum v%s" % __version__

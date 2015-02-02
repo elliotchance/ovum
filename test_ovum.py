@@ -1,5 +1,6 @@
 from unittest import TestCase
 import subprocess
+import ovum
 
 class TestOvum(TestCase):
     def assert_ovum_output(self, args, expected_output, expected_error=None):
@@ -14,3 +15,6 @@ class TestOvum(TestCase):
 
     def test_cli_version(self):
         self.assert_ovum_output(['--version'], "ovum v1.0\n")
+
+    def test_module_version(self):
+        self.assertEqual(ovum.__version__, '1.0')
