@@ -18,3 +18,6 @@ class TestOvum(TestCase):
 
     def test_module_version(self):
         self.assertEqual(ovum.__version__, '1.0')
+
+    def test_require_with_missing_argument(self):
+        self.assert_ovum_output(['require'], "Usage: ovum require <package>\n")
