@@ -27,6 +27,13 @@ class TestOvum(TestCase):
         self.assert_ovum_output(['require'], "Usage: ovum require <package>\n")
 
     def test_require_will_create_yml_if_not_exists(self):
-        self.assertFalse(os.path.exists('ovum.yml'))
+        os.remove('ovum.yml')
         self.run_ovum(['require', 'pypi:mock'])
         self.assertTrue(os.path.exists('ovum.yml'))
+
+    def test_require_will_setup_yml_file(self):
+        os.remove('ovum.yml')
+        self.run_ovum(['require', 'pypi:mock'])
+        with open("ovum.yml", "r") as yml:
+            data = yml.read()
+            self.assertEqual(data, 'require:\n- "pypi:mock"')

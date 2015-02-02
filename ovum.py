@@ -7,7 +7,8 @@ def require(args):
         print "Usage: ovum require <package>"
         return
 
-    open('ovum.yml', 'a').close()
+    with open('ovum.yml', 'a') as yml:
+        yml.write('require:\n- "pypi:mock"')
 
 def main(args):
     if args[0] == 'require':
