@@ -48,3 +48,7 @@ class TestOvum(TestCase):
         with open("ovum.yml", "r") as yml:
             data = yml.read()
             self.assertEqual(data, 'require:\n- pypi:mock\n- pypi:mock2\n')
+
+    def test_requiredev_with_missing_argument(self):
+        self.assert_ovum_output(['require-dev'],
+                                "Usage: ovum require-dev <package>\n")

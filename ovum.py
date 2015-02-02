@@ -28,8 +28,10 @@ def require(args):
 def main(args):
     if args[0] == 'require':
         return require(args[1:])
-
-    print "ovum v%s" % __version__
+    elif args[0] == 'require-dev':
+        print "Usage: ovum require-dev <package>"
+    else:
+        print "ovum v%s" % __version__
 
 if __name__ == "__main__":
     main(sys.argv[1:])
