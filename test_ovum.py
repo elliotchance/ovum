@@ -71,3 +71,11 @@ class TestOvum(TestCase):
         with open("ovum.yml", "r") as yml:
             data = yml.read()
             self.assertEqual(data, 'require-dev:\n- pypi:mock\n- pypi:mock2\n')
+
+    def test_install_creates_vendor_folder(self):
+        try:
+            os.remove('vendor')
+        except:
+            pass
+        self.run_ovum(['install'])
+        self.assertTrue(os.path.exists('vendor'))

@@ -1,6 +1,7 @@
 import sys
 import yaml
 import os.path
+import os
 
 __version__ = '1.0'
 __ovum_yml__ = 'ovum.yml'
@@ -32,6 +33,9 @@ def main(args):
         return require(args[1:], False)
     elif args[0] == 'require-dev':
         return require(args[1:], True)
+    elif args[0] == 'install':
+        if not os.path.exists('vendor'):
+            os.mkdir('vendor')
 
     print "ovum v%s" % __version__
 
