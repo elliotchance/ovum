@@ -1,15 +1,19 @@
 from unittest import TestCase
 import subprocess
 import ovum
+import os.path
 
 class TestOvum(TestCase):
+    def run_ovum(self, args):
+        command = ['python', 'ovum.py']
+        p = subprocess.Popen(command + args, stdout=subprocess.PIPE)
+        return p.communicate()
+
     def assert_ovum_output(self, args, expected_output, expected_error=None):
         """
         :type args: list
         """
-        command = ['python', 'ovum.py']
-        p = subprocess.Popen(command + args, stdout=subprocess.PIPE)
-        out, err = p.communicate()
+        out, err = self.run_ovum(args)
         self.assertEqual(err, expected_error)
         self.assertEqual(out, expected_output)
 
@@ -21,3 +25,8 @@ class TestOvum(TestCase):
 
     def test_require_with_missing_argument(self):
         self.assert_ovum_output(['require'], "Usage: ovum require <package>\n")
+
+    def test_require_will_create_yml_if_not_exists(self):
+        self.assertFalse(os.path.exists('ovum.yml'))
+        self.run_ovum(['require', 'pypi:mock'])
+        self.assertTrue(os.path.exists('ovum.yml'))
