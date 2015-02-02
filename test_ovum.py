@@ -52,3 +52,22 @@ class TestOvum(TestCase):
     def test_requiredev_with_missing_argument(self):
         self.assert_ovum_output(['require-dev'],
                                 "Usage: ovum require-dev <package>\n")
+
+    def test_requiredev_will_create_yml_if_not_exists(self):
+        os.remove('ovum.yml')
+        self.run_ovum(['require-dev', 'pypi:mock'])
+        self.assertTrue(os.path.exists('ovum.yml'))
+
+    def test_requiredev_will_setup_yml_file(self):
+        os.remove('ovum.yml')
+        self.run_ovum(['require-dev', 'pypi:mock'])
+        with open("ovum.yml", "r") as yml:
+            data = yml.read()
+            self.assertEqual(data, 'require-dev:\n- pypi:mock\n')
+
+    def test_requiredev_will_append_yml_file(self):
+        self.setup_yml('require-dev:\n- "pypi:mock"')
+        self.run_ovum(['require-dev', 'pypi:mock2'])
+        with open("ovum.yml", "r") as yml:
+            data = yml.read()
+            self.assertEqual(data, 'require-dev:\n- pypi:mock\n- pypi:mock2\n')
