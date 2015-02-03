@@ -100,3 +100,10 @@ class TestOvum(OvumTestCase):
         with open("ovum.yml", "r") as yml:
             data = yml.read()
             self.assertEqual(data, 'require-dev:\n- pypi:mock\n')
+
+
+class TestPyPIPackage(TestCase):
+    def test_fetching_a_package_that_exists_will_not_raise_exception(self):
+        package = PyPIPackage('mock')
+        package.fetch()
+

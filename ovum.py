@@ -1,6 +1,8 @@
 import sys
 import yaml
 import os
+import urllib2
+import json
 
 __version__ = '1.0'
 __ovum_yml__ = 'ovum.yml'
@@ -10,9 +12,17 @@ class PyPIPackage:
         self.name = name
 
     def fetch(self):
+        # This is a temporary safety precaution and should be removed in the
+        # future.
         if not self.name:
             return
-        raise RuntimeError("Could not find package: %s" % self.name)
+
+        url = 'http://pypi.python.org/pypi/%s/json' % self.name
+
+        try:
+            data = urllib2.urlopen(url).read()
+        except:
+            raise RuntimeError("Could not find package: %s" % self.name)
 
 class CLI:
     def get_package_for_name(self, name):
