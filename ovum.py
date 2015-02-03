@@ -15,10 +15,15 @@ class Versions:
                          in versions]
 
     def normalized(self, version):
-        if re.match('^(\d+)$', version):
-            return "%s.0.0" % version
-        if re.match('^(\d+).(\d+)$', version):
+        m = re.match('^(.+)b(\d+)$', version)
+        if m:
+            return "%s-beta.%s" % (m.group(1), m.group(2))
+
+        if re.match('^\d+.\d+$', version):
             return "%s.0" % version
+        if re.match('^\d+$', version):
+            return "%s.0.0" % version
+        
         return version
 
     def __len__(self):
