@@ -1,10 +1,12 @@
 import sys
 import yaml
-import os.path
 import os
 
 __version__ = '1.0'
 __ovum_yml__ = 'ovum.yml'
+
+def fetch_pypi(name):
+    print "Could not find package: %s" % name
 
 def require(args, dev):
     key = 'require-dev' if dev else 'require'
@@ -18,7 +20,7 @@ def require(args, dev):
         with open(__ovum_yml__, 'r') as file:
             yml = yaml.load(file)
     else:
-        open('ovum.yml', 'w').close()
+        open(__ovum_yml__, 'w').close()
 
     if key not in yml:
         yml[key] = []
@@ -27,6 +29,8 @@ def require(args, dev):
 
     with open(__ovum_yml__, 'w') as file:
         file.write(yaml.dump(yml, default_flow_style=False))
+
+    fetch_pypi(args[0])
 
 def main(args):
     if args[0] == 'require':

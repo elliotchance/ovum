@@ -79,3 +79,7 @@ class TestOvum(TestCase):
             pass
         self.run_ovum(['install'])
         self.assertTrue(os.path.exists('vendor'))
+
+    def test_installing_pypi_package_that_does_not_exist(self):
+        self.assert_ovum_output(['require', 'pypi:hkdsfhgfd'],
+                                "Could not find package: pypi:hkdsfhgfd\n")
