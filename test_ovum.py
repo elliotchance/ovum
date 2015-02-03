@@ -124,3 +124,7 @@ class TestVersions(TestCase):
     def test_latest_version_with_one_versions(self):
         versions = Versions(['1.0.0'])
         self.assertEqual(versions.latest(), Version('1.0.0'))
+
+    def test_latest_version_with_two_versions(self):
+        versions = Versions(['1.0.0', '1.2.0'])
+        self.assertEqual(versions.latest(), Version('1.2.0'))

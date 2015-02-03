@@ -10,14 +10,14 @@ __ovum_yml__ = 'ovum.yml'
 
 class Versions:
     def __init__(self, versions):
-        self.versions = versions
+        self.versions = [Version(version) for version in versions]
 
     def __len__(self):
         return len(self.versions)
 
     def latest(self):
         if self.versions:
-            return Version(self.versions[0])
+            return sorted(self.versions, reverse=True)[0]
 
         return None
 
