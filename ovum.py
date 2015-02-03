@@ -3,7 +3,7 @@ import yaml
 import os
 import urllib2
 import json
-from version import Version
+from version import Version, VersionError
 import re
 
 __version__ = '1.0'
@@ -11,8 +11,13 @@ __ovum_yml__ = 'ovum.yml'
 
 class Versions:
     def __init__(self, versions):
-        self.versions = [Version(self.normalized(version)) for version
-                         in versions]
+        self.versions = []
+        for version in versions:
+            try:
+                self.versions.append(Version(self.normalized(version)))
+            except VersionError:
+                # Unfortunately we must ignore this version. :(
+                pass
 
     def normalized(self, version):
         if re.match('^\d+.\d+$', version):
