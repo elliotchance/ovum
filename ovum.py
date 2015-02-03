@@ -16,6 +16,9 @@ class Versions:
         return len(self.versions)
 
     def latest(self):
+        if self.versions:
+            return Version(self.versions[0])
+
         return None
 
 class PyPIPackage:
