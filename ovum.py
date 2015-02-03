@@ -4,13 +4,20 @@ import os
 import urllib2
 import json
 from version import Version
+import re
 
 __version__ = '1.0'
 __ovum_yml__ = 'ovum.yml'
 
 class Versions:
     def __init__(self, versions):
-        self.versions = [Version(version) for version in versions]
+        self.versions = [Version(self.normalized(version)) for version
+                         in versions]
+
+    def normalized(self, version):
+        if re.match('^(\d).(\d)$', version):
+            return "%s.0" % version
+        return version
 
     def __len__(self):
         return len(self.versions)
