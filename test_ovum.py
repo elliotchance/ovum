@@ -107,3 +107,8 @@ class TestPyPIPackage(TestCase):
         package = PyPIPackage('mock')
         package.fetch()
 
+
+class TestVersions(TestCase):
+    def test_size_of_no_items_is_zero(self):
+        versions = Versions()
+        self.assertEqual(len(versions), 0)

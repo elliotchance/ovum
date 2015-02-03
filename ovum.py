@@ -3,9 +3,14 @@ import yaml
 import os
 import urllib2
 import json
+from version import Version
 
 __version__ = '1.0'
 __ovum_yml__ = 'ovum.yml'
+
+class Versions:
+    def __len__(self):
+        return 0
 
 class PyPIPackage:
     def __init__(self, name):
