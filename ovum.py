@@ -15,7 +15,7 @@ class Versions:
         for version in versions:
             try:
                 self.versions.append(Version(self.normalized(version)))
-            except VersionError:
+            except:
                 # Unfortunately we must ignore this version. :(
                 pass
 
@@ -57,9 +57,12 @@ class PyPIPackage:
         url = 'http://pypi.python.org/pypi/%s/json' % self.name
 
         try:
-            data = urllib2.urlopen(url).read()
+            return json.loads(urllib2.urlopen(url).read())
         except:
             raise RuntimeError("Could not find package: %s" % self.name)
+
+    def available_versions(self):
+        return Versions(self.fetch()["releases"].keys())
 
 class CLI:
     def get_package_for_name(self, name):
