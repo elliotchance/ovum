@@ -15,15 +15,18 @@ class Versions:
                          in versions]
 
     def normalized(self, version):
-        m = re.match('^(.+)b(\d*)$', version)
-        if m:
-            n = m.group(2) if m.group(2) else 1
-            return "%s-beta.%s" % (m.group(1), n)
-
         if re.match('^\d+.\d+$', version):
-            return "%s.0" % version
-        if re.match('^\d+$', version):
-            return "%s.0.0" % version
+            version = "%s.0" % version
+        elif re.match('^\d+$', version):
+            version = "%s.0.0" % version
+
+        m = re.match('^(.+)([ab])(\d*)$', version)
+        if m:
+            n = m.group(3) if m.group(3) else 1
+            if m.group(2) is 'a':
+                version = "%s-alpha.%s" % (m.group(1), n)
+            else:
+                version = "%s-beta.%s" % (m.group(1), n)
 
         return version
 
