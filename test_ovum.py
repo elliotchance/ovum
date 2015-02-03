@@ -140,3 +140,7 @@ class TestVersions(TestCase):
     def test_alternate_format_3(self):
         versions = Versions(['2.3.1b14'])
         self.assertEqual(versions.latest(), Version('2.3.1-beta.14'))
+
+    def test_alternate_format_4(self):
+        versions = Versions(['2.3.1b'])
+        self.assertEqual(versions.latest(), Version('2.3.1-beta.1'))
