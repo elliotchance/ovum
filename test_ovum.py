@@ -116,3 +116,7 @@ class TestVersions(TestCase):
     def test_size_of_one_version_is_one(self):
         versions = Versions(['1.0'])
         self.assertEqual(len(versions), 1)
+
+    def test_latest_version_with_zero_versions_is_none(self):
+        versions = Versions([])
+        self.assertEqual(versions.latest(), None)

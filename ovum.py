@@ -15,6 +15,9 @@ class Versions:
     def __len__(self):
         return len(self.versions)
 
+    def latest(self):
+        return None
+
 class PyPIPackage:
     def __init__(self, name):
         self.name = name
