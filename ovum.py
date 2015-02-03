@@ -9,8 +9,11 @@ __version__ = '1.0'
 __ovum_yml__ = 'ovum.yml'
 
 class Versions:
+    def __init__(self, versions):
+        self.versions = versions
+
     def __len__(self):
-        return 0
+        return len(self.versions)
 
 class PyPIPackage:
     def __init__(self, name):

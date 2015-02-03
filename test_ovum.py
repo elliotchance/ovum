@@ -110,5 +110,9 @@ class TestPyPIPackage(TestCase):
 
 class TestVersions(TestCase):
     def test_size_of_no_items_is_zero(self):
-        versions = Versions()
+        versions = Versions([])
         self.assertEqual(len(versions), 0)
+
+    def test_size_of_one_version_is_one(self):
+        versions = Versions(['1.0'])
+        self.assertEqual(len(versions), 1)
