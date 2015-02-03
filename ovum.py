@@ -15,7 +15,9 @@ class Versions:
                          in versions]
 
     def normalized(self, version):
-        if re.match('^(\d).(\d)$', version):
+        if re.match('^(\d+)$', version):
+            return "%s.0.0" % version
+        if re.match('^(\d+).(\d+)$', version):
             return "%s.0" % version
         return version
 
