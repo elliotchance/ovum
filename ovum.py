@@ -1,13 +1,13 @@
 import sys
-import yaml
 import os
 import urllib2
 import json
-from version import Version, VersionError
+from version import Version
 import re
 
 __version__ = '1.0'
-__ovum_yml__ = 'ovum.yml'
+__ovum_file__ = 'ovum.json'
+__ovum_lock_file__ = 'ovum.lock'
 
 class Versions:
     def __init__(self, versions):
@@ -59,10 +59,44 @@ class PyPIPackage:
         try:
             return json.loads(urllib2.urlopen(url).read())
         except:
-            raise RuntimeError("Could not find package: %s" % self.name)
+            raise RuntimeError("Could not find package: pypi:%s" % self.name)
 
     def available_versions(self):
         return Versions(self.fetch()["releases"].keys())
+
+class BaseConfigFile:
+    def __init__(self, file_path):
+        self.file_path = file_path
+        self.config = self.load()
+
+    def load(self):
+        if os.path.exists(self.file_path):
+            with open(self.file_path, 'r') as file:
+                return json.load(file)
+        return {}
+
+    def save(self):
+        with open(self.file_path, 'w') as file:
+            json.dump(self.config, file, indent=2)
+
+class LockFile(BaseConfigFile):
+    def __init__(self):
+        BaseConfigFile.__init__(self, __ovum_lock_file__)
+
+    def add_resolved(self, package_name, version):
+        if 'resolved' not in self.config:
+            self.config['resolved'] = {}
+        self.config['resolved'][package_name] = version
+
+class ConfigFile(BaseConfigFile):
+    def __init__(self):
+        BaseConfigFile.__init__(self, __ovum_file__)
+
+    def add_require(self, package_name, version, dev):
+        key = 'require-dev' if dev else 'require'
+        if key not in self.config:
+            self.config[key] = {}
+        self.config[key][package_name] = version
 
 class CLI:
     def get_package_for_name(self, name):
@@ -75,27 +109,24 @@ class CLI:
             print "Usage: ovum %s <package>" % key
             return
 
+        package_name = args[0]
+        config_file = ConfigFile()
+        lock_file = LockFile()
+
+        config_file.add_require(package_name, "*", dev)
+
         try:
-            package = self.get_package_for_name(args[0])
+            package = self.get_package_for_name(package_name[5:])
             package.fetch()
         except RuntimeError as e:
             print e
             return
 
-        yml = {}
-        if os.path.exists(__ovum_yml__):
-            with open(__ovum_yml__, 'r') as file:
-                yml = yaml.load(file)
-        else:
-            open(__ovum_yml__, 'w').close()
+        latest_version = str(package.available_versions().latest())
+        lock_file.add_resolved(package_name, latest_version)
 
-        if key not in yml:
-            yml[key] = []
-
-        yml[key].append(args[0])
-
-        with open(__ovum_yml__, 'w') as file:
-            file.write(yaml.dump(yml, default_flow_style=False))
+        config_file.save()
+        lock_file.save()
 
     def main(self, args):
         if args[0] == 'require':

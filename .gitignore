@@ -54,3 +54,8 @@ docs/_build/
 target/
 
 /.idea/
+
+/ovum.lock
+/ovum.json
+
+.DS_Store
